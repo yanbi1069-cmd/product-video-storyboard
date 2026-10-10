@@ -1,0 +1,10 @@
+.env
+.env.*
+*.env.txt
+*credentials*
+*service-account*
+local.md
+outputs/
+private/
+__pycache__/
+*.zip

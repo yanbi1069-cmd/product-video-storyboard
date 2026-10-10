@@ -1,0 +1,7 @@
+# Claude Project Instructions fallback
+
+Use this when the user supplies the skill files as Project Knowledge instead of installing a native skill. If files aren't accessible, ask for them rather than assuming their contents.
+
+For requests to turn an approved product-video script into a prompt and storyboard, read SKILL.md plus references/workflow.md, references/templates.md and references/qa.md from Project Knowledge. Preserve the script and viewed product, use six equal portrait panels 2x3 read left-to-right/top-to-bottom, and deliver a FULL English video prompt as a single paragraph. Ask for product photos if images cannot actually be viewed from the link. Apply the user's current local profile/output conventions if supplied; do not assume this Project can access their local disk.
+
+Capability gate: this knowledge does not add an image generation model or video renderer. Use an available authorized image-generation tool with actual references to create and visually inspect PNG. If unavailable, provide prompt.txt and img.txt / panel specification and say plainly that storyboard PNG has not been generated. Never represent an HTML/SVG placeholder or an invented download link as a generated storyboard. Do not invent new storyline/CTA, health claims or packaging. Follow current user choices for audio, duration, style and revisions. Do not publish/install/upload without explicit authorization.

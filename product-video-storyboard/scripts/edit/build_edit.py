@@ -103,6 +103,9 @@ def main(spec_path):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        raise SystemExit(__doc__)
+    if len(sys.argv) != 2 or sys.argv[1] in ('-h', '--help'):
+        print(__doc__)
+        sys.exit(0 if len(sys.argv) == 2 else 1)
+    if not Path(sys.argv[1]).is_file():
+        raise SystemExit(f'spec file not found: {sys.argv[1]}')
     main(sys.argv[1])

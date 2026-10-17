@@ -1,5 +1,9 @@
 # Workflow rules
 
+## Mode and characters
+
+Pick SINGLE or SPLIT with the table in SKILL.md before any file is written, and tell the user the reason in one or two sentences. Show the character notice and confirm an approved user-made cast sheet (characters.md) first. The hook formula and split rules are in hooks.md.
+
 ## Script and product lock
 
 Use the supplied script as authority. Clarify only consequential gaps. Missing hook/CTA/audio is not permission to invent them: omit if intentionally absent, otherwise ask or label a proposal for approval. Do not add injuries, pet actions, dialogue, flashbacks or a different setting. Preserve exact custom names/year/photo unless the user approves replacement artwork.
@@ -24,8 +28,14 @@ For toppling props, lock base/pivot, force direction, continuous arc, landing si
 
 Map emotion to action: relaxed brow/jaw/shoulders, appropriate gaze target, light concentration during manipulation, spontaneous small smile/reaction at payoff. Neither a constant forced smile nor an expressionless subdued performance is required. Do not equate happiness with efficacy evidence.
 
+## Audio and language lock
+
+Never rely on "no dialogue" to keep a clip silent. Always write the explicit lock from SKILL.md/templates.md (NO-SPEECH, or American-English-only exact dialogue) and name Chinese/Mandarin in it and in the Avoid list. Decide silence or exact lines from the approved script, never from habit. If the tool UI has a language/voice setting, set it to English (US) as well; the prompt lock is still required.
+
 ## Revisions after tests
 
 Use actual resulting clip or exact error message, model, generation mode (ingredients/references/first frame) and UI duration. Distinguish rejected generation from incorrect visual output. Do not assume length caused rejection. Preserve approved concept and format; change the narrowest demonstrated failure. Mark v2/v3 rather than silently overwriting.
+
+Fallback when a finished clip has wrong-language speech but the picture is good: keep the video, separate voice from music with a stem separator (Demucs `--two-stems=vocals`), keep the music stem, synthesize the corrected line (for example edge-tts `en-US-AndrewNeural` for an American male), time it to the original speech window, remix, then verify by transcription. Lip movement still follows the original language, so prefer regenerating when speech is prominent. Reference implementation: `scripts/edit/replace_voice.py` (verify with `scripts/edit/check_audio_language.py`), explained in edit-post.md.
 
 If repeated generation cannot preserve a key invariant, report the specific failure and propose an approved change or editing workflow; don't claim the prompt guarantees fidelity. No external publication or fresh paid integrations without scope/authorization.

@@ -1,55 +1,76 @@
-# Product Video Storyboard — Codex & Claude
+# Product Video Storyboard v2 (Codex, Claude Code, Claude Projects)
 
-Bộ skill v1, 10/10/2026. Chuyển **kịch bản đã duyệt + link/ảnh sản phẩm** thành prompt video FULL một đoạn tiếng Anh và storyboard ảnh dọc 6 ô. Không tự render video, không tự đăng bài, không tự scrape IG.
+Skill that turns an **approved product-video script + product image/link** into FULL one-paragraph English video prompts and portrait six-panel storyboards, for tools such as Google Flow/Veo and Seedance. It also covers the finishing steps for short sales videos (text overlays, audio and language checks). It never renders videos, posts, scrapes or uploads by itself.
 
-## Gói chia sẻ
+Skill này biến **kịch bản đã duyệt + ảnh/link sản phẩm** thành prompt video tiếng Anh một đoạn và storyboard ảnh dọc 6 ô, kèm hướng dẫn edit video bán hàng ngắn.
 
-Thư mục `product-video-storyboard/` là skill dùng chung, chứa SKILL.md, hướng dẫn tạo ảnh/prompt, checklist và script kiểm tra. Đây là phần có thể đưa lên GitHub sau khi duyệt. Không kèm token, ảnh khách hàng, lịch sử chat hoặc ảnh tham khảo của bên thứ ba. Chưa chọn giấy phép phân phối; quyết định license trước khi công khai.
+## IMPORTANT: create your OWN AI characters / Hãy tự tạo nhân vật AI của riêng bạn
 
-Profile lưu file riêng của người dùng không đi kèm repository này. Hãy cung cấp quy ước đầu ra trong phiên/Project Instructions. Không phải plugin cung cấp sẵn image model: môi trường chạy cần có công cụ xem ảnh và tạo ảnh từ tham chiếu. Nếu thiếu, skill chỉ xuất đặc tả ảnh và phải báo chưa có PNG.
+This repository ships **no characters** and must never be used to recreate another creator's characters (not from memory, not from old projects, not from this repo's examples). Make your own cast sheet, approve it, then build storyboards. Placeholders like `[HERO]` are intentional.
 
-## Codex terminal
+Repo này **không kèm nhân vật nào**. Không dùng lại nhân vật của kênh khác, của dự án cũ hay trong bộ nhớ. Hãy tạo bảng nhân vật (cast sheet) của riêng bạn, duyệt, rồi mới làm storyboard. Chi tiết: `product-video-storyboard/references/characters.md`.
 
-Copy toàn bộ thư mục `product-video-storyboard` vào `.agents/skills/` của dự án muốn dùng. Bắt đầu phiên từ dự án đó, kiểm tra skill được nhận và gọi `$product-video-storyboard`. Không chỉ copy SKILL.md, vì còn các reference/script. Bản bàn giao này chưa tự cài vào máy.
+## What is new in v2 / Có gì mới
 
-Tài liệu chính thức: https://developers.openai.com/codex/skills/
+1. **Two modes: 1 storyboard or 2 storyboards.** Sales videos follow a formula: *hook that grabs attention and creates curiosity, then product reveal (unboxing), then use, then check-in / CTA*.
+   - **SINGLE** (1 SB + 1 prompt): one location, one continuous scene, no object event in the hook, six or fewer beats.
+   - **SPLIT** (2 SB + 2 prompts, clip A = hook, clip B = product, merged A then B with a hard cut): the scene changes place or time, the hook has a physical event (drop, spill, fall), more than six beats, or a hook already failed in a single board. A hook clip can be reused with several products.
+   - Why: a storyboard panel freezes one state. If panel 1 shows the end state of an event (cup already on the floor), the video tool starts there and the event never happens. SPLIT lets clip A start from the START state. See `references/hooks.md`.
+2. **Audio and language lock.** "No dialogue" alone is not enough: video tools can invent speech in a default language (a real test produced Mandarin). Every prompt must carry an explicit NO-SPEECH lock or an exact-line, American-English-only dialogue lock, and `scripts/check.py` enforces it.
+3. **Post-production** (`references/edit-post.md`, `scripts/edit/`): text overlay rules (hook, middle text, call to action), audio policies, a spoken-language checker (`check_audio_language.py`), a voice replacement fallback that keeps the music (`replace_voice.py`) and a text-overlay project builder (`build_edit.py`).
 
-## Claude Code
+## Layout
 
-Copy cùng thư mục vào `.claude/skills/` của dự án. Gọi `/product-video-storyboard`. Không có image tool thì không thể tạo storyboard PNG thật chỉ bằng việc cài skill.
-
-Tài liệu: https://code.claude.com/docs/en/skills
-
-## Claude web / Desktop
-
-Custom Skills hiện yêu cầu ZIP chứa thư mục skill có SKILL.md, nhập trong Customize > Skills nếu tài khoản có tính năng. Gói này KHÔNG tự nén theo quy ước người dùng; chỉ tạo ZIP khi người dùng yêu cầu. GitHub URL không tự cài skill cho tài khoản Claude.
-
-Nếu dùng Claude Project: đưa các file Markdown/TXT trong skill vào Project Knowledge, dùng `references/claude-project.md` làm Project Instructions. Đây là cách dùng hướng dẫn, không phải cài native skill và không bổ sung khả năng tạo ảnh.
-
-Tài liệu: https://support.claude.com/en/articles/12512180-use-skills-in-claude
-
-## Gửi đầu vào
-
-```text
-Dùng product-video-storyboard.
-Sản phẩm: [link hoặc ảnh đính kèm]
-Kịch bản: [diễn biến đã duyệt]
-Thời lượng: 10 giây (hoặc thời lượng khác)
-Âm thanh/chữ: [nếu đã có yêu cầu]
-Đầu ra: prompt + SB (hoặc bộ đầy đủ có ảnh cảnh riêng)
-Quy ước lưu: [đường dẫn/quy ước của bạn]
+```
+product-video-storyboard/
+  SKILL.md                      entry point: notice, mode table, audio lock, process
+  references/
+    workflow.md  templates.md   rules, single and split prompt scaffolds
+    hooks.md                    hook formula, physical-event rule, split rules
+    characters.md               how to create your own characters
+    qa.md                       delivery checklist and audio language check
+    edit-post.md                post-production edit guide
+    claude-project.md           Claude Project fallback
+  scripts/
+    check.py                    structural checks (single and split outputs, audio lock)
+    edit/                       build_edit.py, check_audio_language.py, replace_voice.py, assets/
+test_check.py                   unit tests for check.py
 ```
 
-Chỉ sản phẩm + kịch bản là đầu vào bắt buộc; không hỏi lại những thông tin đã rõ. Thiếu ảnh xem được phải xin ảnh, không đoán sản phẩm. Thiếu CTA không tự sáng tác CTA.
+## Install
 
-## Kiểm tra
+- **Codex terminal:** copy the whole `product-video-storyboard/` folder into `.agents/skills/` of your project, start a session there and call `$product-video-storyboard`. Copy the whole folder, not only SKILL.md.
+- **Claude Code:** copy the folder into `.claude/skills/` and call `/product-video-storyboard`.
+- **Claude web/Desktop:** custom skills need a ZIP of the skill folder (Customize > Skills). Or add the Markdown files to a Claude Project as knowledge and use `references/claude-project.md` as the project instructions (guidance only).
+- The skill needs an environment that can **view images and generate images from references**. Without an image tool it only produces the prompt and an image specification and says the PNG was not generated.
 
-`python product-video-storyboard/scripts/check.py skill product-video-storyboard`
+## Typical request
 
-`python product-video-storyboard/scripts/check.py output [thư_mục_chứa_prompt.txt]`
+```text
+Use product-video-storyboard.
+Product: [link or attached photo]
+Script: [approved story]
+Duration: 10 seconds per clip
+Characters: [attach YOUR approved cast sheet]
+Audio/text: [requirements, or "no speech"]
+Output: prompt + storyboard (the skill chooses SINGLE or SPLIT and explains why)
+```
 
-Lệnh output chỉ kiểm tra file/một dòng/placeholder và kích thước PNG cơ bản, KHÔNG chứng minh đúng sản phẩm, đúng 6 ô hay video chạy thành công. Khi chưa có image tool, thêm `--text-only` để kiểm tra prompt.txt + img.txt thay PNG.
+## Check your files
 
-## GitHub
+```bash
+python product-video-storyboard/scripts/check.py skill product-video-storyboard
+python product-video-storyboard/scripts/check.py output <folder>          # prompt.txt + sb.png, or a/ and b/ for SPLIT
+python product-video-storyboard/scripts/check.py output <folder> --text-only
+python test_check.py
+```
 
-Chỉ publish phần đã duyệt sau khi chốt repository, public/private và quyền truy cập. Không tự tạo repo/push/install. `.gitignore` chỉ là lớp phòng ngừa; kiểm tra danh sách file thật trước mỗi lần upload. Nên lấy riêng thư mục gói này, không add cả thư mục IG.
+`check.py output` verifies files, one-line prompts, unfilled placeholders, PNG header, the audio and language lock and, for SPLIT, the `_a`/`_b` tags and the hard cut. It does NOT prove the product is right, that the board has six panels, or that a video will work. Always inspect the images.
+
+## Third-party assets and licenses
+
+- Code and documents: MIT License (see `LICENSE`).
+- `scripts/edit/assets/icon-*.svg` are Twemoji graphics, CC-BY 4.0 (see `LICENSE-icons.txt`). Credit Twemoji when you publish videos that use them.
+- External tools (not included): ffmpeg, HyperFrames, Demucs, edge-tts, faster-whisper. Follow their own licenses and terms. edge-tts sends text to an online speech service.
+
+No tokens, customer photos, chat history or third-party reference footage are included.

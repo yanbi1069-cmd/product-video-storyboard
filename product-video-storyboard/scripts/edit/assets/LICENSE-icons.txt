@@ -1,0 +1,4 @@
+icon-1f384.svg (Christmas tree) and icon-1f381.svg (wrapped gift) are Twemoji graphics.
+Copyright Twitter, Inc and other contributors. Licensed under CC-BY 4.0: https://creativecommons.org/licenses/by/4.0/
+Source: https://github.com/twitter/twemoji
+Attribution is required when you publish a video that uses them (credit "Twemoji, CC-BY 4.0" in the post or description).
